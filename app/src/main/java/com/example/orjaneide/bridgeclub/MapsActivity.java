@@ -38,8 +38,10 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
    private FloatingSearchView mSearchView;
+    private LocationRequest mLocationRequest;
+    private static final String LOG = MapsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng init = new LatLng(65, 15);
@@ -63,9 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.addMarker(new MarkerOptions().position(bergen));
 
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -77,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // TODO addAllMarkersToMap();
 
-        // TODO addInfoWindowToMarker();
+        addInfoWindowToMarker();
 
         mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
         mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
@@ -104,47 +103,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
-
-    private void  goToLocationZoom(double lat, double lng, float zoom){
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
-        mMap.moveCamera(update);
-    }
-
-
-
-    private void addInfoWindowToMarker() {
-        if(mMap != null){
-            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-                    View v = getLayoutInflater().inflate(R.layout.info_window, null);
-
-                    TextView clubName = (TextView) v.findViewById(R.id.clubName);
-                    TextView place = (TextView) v.findViewById(R.id.place);
-                    TextView address = (TextView) v.findViewById(R.id.address);
-                    TextView contactPerson = (TextView) v.findViewById(R.id.contactPerson);
-                    TextView times = (TextView) v.findViewById(R.id.times);
-                    TextView webPage = (TextView) v.findViewById(R.id.webPage);
-                    TextView email = (TextView) v.findViewById(R.id.email);
-                    TextView phone = (TextView) v.findViewById(R.id.phone);
-
-                    LatLng ll = marker.getPosition();
-                    return v;
-                }
-            });
-        }
-    }
-
-    private void addAllMarkersToMap() {
-    }
-
-    LocationRequest mLocationRequest;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -190,5 +148,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.animateCamera(update);
         }
 
+    }
+
+    private void  goToLocationZoom(double lat, double lng, float zoom){
+        LatLng ll = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        mMap.moveCamera(update);
+    }
+
+
+
+    private void addInfoWindowToMarker() {
+        if(mMap != null){
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    View v = getLayoutInflater().inflate(R.layout.info_window, null);
+
+                    TextView clubName = (TextView) v.findViewById(R.id.clubName);
+                    TextView place = (TextView) v.findViewById(R.id.place);
+                    TextView address = (TextView) v.findViewById(R.id.address);
+                    TextView contactPerson = (TextView) v.findViewById(R.id.contactPerson);
+                    TextView times = (TextView) v.findViewById(R.id.times);
+                    TextView webPage = (TextView) v.findViewById(R.id.webPage);
+                    TextView email = (TextView) v.findViewById(R.id.email);
+                    TextView phone = (TextView) v.findViewById(R.id.phone);
+
+                    LatLng ll = marker.getPosition();
+                    return v;
+                }
+            });
+        }
+    }
+
+    private void addAllMarkersToMap() {
     }
 }
