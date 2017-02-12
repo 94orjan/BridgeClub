@@ -47,7 +47,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        LatLng init = new LatLng(65, 15);
+        LatLng bergen = new LatLng(60.4, 5.32);
+
         mMap = googleMap;
+
+        mMap.addMarker(new MarkerOptions().position(bergen));
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        mGoogleApiClient.connect();
 
         if(mMap != null){
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -76,17 +93,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        LatLng init = new LatLng(65, 15);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
-
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-        mGoogleApiClient.connect();
     }
 
     LocationRequest mLocationRequest;
