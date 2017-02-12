@@ -66,6 +66,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mGoogleApiClient.connect();
 
+        addAllMarkersToMap();
+
+        addInfoWindowToMarker();
+
+
+
+
+    }
+
+    private void addInfoWindowToMarker() {
         if(mMap != null){
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
@@ -79,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     TextView clubName = (TextView) v.findViewById(R.id.clubName);
                     TextView place = (TextView) v.findViewById(R.id.place);
-                    TextView andress = (TextView) v.findViewById(R.id.address);
+                    TextView address = (TextView) v.findViewById(R.id.address);
                     TextView contactPerson = (TextView) v.findViewById(R.id.contactPerson);
                     TextView times = (TextView) v.findViewById(R.id.times);
                     TextView webPage = (TextView) v.findViewById(R.id.webPage);
@@ -91,8 +101,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+    }
 
-
+    private void addAllMarkersToMap() {
     }
 
     LocationRequest mLocationRequest;

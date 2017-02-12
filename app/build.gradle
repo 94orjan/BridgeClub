@@ -27,5 +27,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
     testCompile 'junit:junit:4.12'
 }
