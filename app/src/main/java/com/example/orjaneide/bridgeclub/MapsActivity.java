@@ -1,18 +1,24 @@
 package com.example.orjaneide.bridgeclub;
 
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -25,14 +31,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.util.List;
 
-import static com.google.android.gms.location.LocationRequest.create;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
+   private FloatingSearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +49,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
 
@@ -66,14 +75,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mGoogleApiClient.connect();
 
-        addAllMarkersToMap();
+        // TODO addAllMarkersToMap();
 
-        addInfoWindowToMarker();
+        // TODO addInfoWindowToMarker();
 
+        mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
+        mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
 
+            }
 
+            @Override
+            public void onSearchAction(String currentQuery) {
+                Geocoder gc = new Geocoder(MapsActivity.this);
+                List<Address> list = null;
+                try {
+                    list = gc.getFromLocationName(currentQuery, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address address = list.get(0);
+
+                double lat = address.getLatitude();
+                double lng = address.getLongitude();
+                goToLocationZoom(lat, lng, 12);
+            }
+        });
 
     }
+
+    private void  goToLocationZoom(double lat, double lng, float zoom){
+        LatLng ll = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        mMap.moveCamera(update);
+    }
+
+
 
     private void addInfoWindowToMarker() {
         if(mMap != null){
