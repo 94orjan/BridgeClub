@@ -103,14 +103,10 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is being created");
-        LatLng init = new LatLng(65, 15);
-        LatLng bergen = new LatLng(60.4, 5.32);
-
         mMap = googleMap;
-        mMap.addMarker(new MarkerOptions().position(bergen));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
-        // TODO addAllMarkersToMap();
 
+        LatLng init = new LatLng(65, 15);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
         addInfoWindowToMarker();
 
         mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
@@ -184,8 +180,6 @@ public class MapsActivity extends FragmentActivity
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
             }
-
-            return;
         }
 
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -251,6 +245,7 @@ public class MapsActivity extends FragmentActivity
         mMap.moveCamera(update);
     }
 
+
     private void addInfoWindowToMarker() {
         if(mMap != null){
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -272,7 +267,17 @@ public class MapsActivity extends FragmentActivity
                     TextView email = (TextView) v.findViewById(R.id.email);
                     TextView phone = (TextView) v.findViewById(R.id.phone);
 
-                    LatLng ll = marker.getPosition();
+                    Club club = (Club) marker.getTag();
+                    if(club !=  null) {
+                        clubName.setText(club.getName());
+                        place.setText(club.getPlace());
+                        address.setText(club.getAddress());
+                        contactPerson.setText(club.getContactPerson());
+                        webPage.setText(club.getWebPage());
+                        email.setText(club.getEmail());
+                        phone.setText(club.getPhone());
+                    }
+
                     return v;
                 }
             });
@@ -282,6 +287,7 @@ public class MapsActivity extends FragmentActivity
     private void addAllMarkersToMap(List<Club> clubs) throws IOException {
         List<Address> addresses;
         LatLng current;
+        Marker marker;
 
         // TODO: Find a way to add each individul club a marker to the map
         for(Club club : clubs) {
@@ -289,7 +295,8 @@ public class MapsActivity extends FragmentActivity
             double lat = addresses.get(0).getLatitude();
             double lng = addresses.get(0).getLongitude();
             current = new LatLng(lat, lng);
-            mMap.addMarker(new MarkerOptions().position(current));
+            marker = mMap.addMarker(new MarkerOptions().position(current));
+            marker.setTag(club);
         }
 
     }
