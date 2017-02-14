@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.example.orjaneide.bridgeclub.model.Club;
@@ -31,9 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,12 +41,11 @@ public class MapsActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     private static final String TAG = MapsActivity.class.getSimpleName();
-    private static final String URL = "SomeFile";
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private FloatingSearchView mSearchView;
     private LocationRequest mLocationRequest;
-    private static final String LOG = MapsActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,28 +56,27 @@ public class MapsActivity extends FragmentActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        if(mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
 
         // Read in XML file
         loadXml();
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map is being created");
         LatLng init = new LatLng(65, 15);
         LatLng bergen = new LatLng(60.4, 5.32);
 
         mMap = googleMap;
-
         mMap.addMarker(new MarkerOptions().position(bergen));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
         // TODO addAllMarkersToMap();
 
         addInfoWindowToMarker();
@@ -117,6 +112,7 @@ public class MapsActivity extends FragmentActivity
         super.onStart();
         if(mGoogleApiClient != null) {
             mGoogleApiClient.connect();
+            Log.d(TAG, "mGoogleApiClient connect method has been called!");
         }
     }
 
@@ -125,11 +121,13 @@ public class MapsActivity extends FragmentActivity
         super.onStop();
         if(mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
+            Log.d(TAG, "mGoogleApiClient is disconnected");
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.d(TAG, "onConnected called!");
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
         try {
@@ -153,16 +151,17 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d(TAG, "onConnectionSuspended called!");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed called!");
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged called!");
         if(location == null){
             Toast.makeText(this, "Finner ikke lokasjonen din.", Toast.LENGTH_LONG).show();
         }
@@ -210,10 +209,14 @@ public class MapsActivity extends FragmentActivity
         }
     }
 
-    private void addAllMarkersToMap() {
+    private void addAllMarkersToMap(List<Club> clubs) {
+
+
     }
 
 
+
+    // Code for loading the local XML file
     public void loadXml() {
         new DownloadXmlTask().execute();
     }
@@ -221,6 +224,7 @@ public class MapsActivity extends FragmentActivity
     private class DownloadXmlTask extends AsyncTask<String, Void, List<Club>> {
         @Override
         protected List<Club> doInBackground(String... strings) {
+            Log.d(TAG, "doInBackground for XML called!");
             try {
                 return loadXmlFromFile();
             } catch (IOException e) {
@@ -232,7 +236,12 @@ public class MapsActivity extends FragmentActivity
 
         @Override
         protected void onPostExecute(List<Club> clubs) {
-            Log.d(TAG, clubs.size() + " clubs!");
+            Log.d(TAG, "onPostExecute called!");
+            if(clubs.size() > 0) {
+                addAllMarkersToMap(clubs);
+            } else {
+                Toast.makeText(MapsActivity.this, "Error with downloading the info", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
