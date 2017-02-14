@@ -4,8 +4,8 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -16,9 +16,10 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.example.orjaneide.bridgeclub.model.Club;
+import com.example.orjaneide.bridgeclub.util.ClubXmlParser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -31,15 +32,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-
+public class MapsActivity extends FragmentActivity
+        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+    private static final String TAG = MapsActivity.class.getSimpleName();
+    private static final String URL = "SomeFile";
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-   private FloatingSearchView mSearchView;
+    private FloatingSearchView mSearchView;
     private LocationRequest mLocationRequest;
     private static final String LOG = MapsActivity.class.getSimpleName();
 
@@ -53,6 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
+        // Read in XML file
+        loadXml();
+
     }
 
     @Override
@@ -63,7 +74,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         mMap.addMarker(new MarkerOptions().position(bergen));
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -71,8 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-        mGoogleApiClient.connect();
 
         // TODO addAllMarkersToMap();
 
@@ -102,6 +110,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -140,7 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         if(location == null){
-            Toast.makeText(this, "Finner ikke lokasjonen din.", Toast.LENGTH_LONG);
+            Toast.makeText(this, "Finner ikke lokasjonen din.", Toast.LENGTH_LONG).show();
         }
         else{
             LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
@@ -187,5 +211,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void addAllMarkersToMap() {
+    }
+
+
+    public void loadXml() {
+        new DownloadXmlTask().execute();
+    }
+
+    private class DownloadXmlTask extends AsyncTask<String, Void, List<Club>> {
+        @Override
+        protected List<Club> doInBackground(String... strings) {
+            try {
+                return loadXmlFromFile();
+            } catch (IOException e) {
+                return new ArrayList<>();
+            } catch (XmlPullParserException e) {
+                return new ArrayList<>();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Club> clubs) {
+            Log.d(TAG, clubs.size() + " clubs!");
+        }
+    }
+
+    private List<Club> loadXmlFromFile() throws IOException, XmlPullParserException {
+        InputStream in = getResources().openRawResource(R.raw.mockdata);
+        ClubXmlParser clubXmlParser = new ClubXmlParser();
+
+        Log.d(TAG, "Inside XmlFromFile");
+
+        try {
+            return clubXmlParser.parse(in);
+        } finally {
+            in.close();
+        }
     }
 }
