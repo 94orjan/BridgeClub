@@ -95,7 +95,7 @@ public class MapsActivity extends FragmentActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                //
             }
         }
     }
@@ -160,7 +160,6 @@ public class MapsActivity extends FragmentActivity
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "onConnected called!");
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(MapsActivity.this)
                         .setTitle("Location Permission")
@@ -261,9 +260,6 @@ public class MapsActivity extends FragmentActivity
                     TextView clubName = (TextView) v.findViewById(R.id.clubName);
                     TextView place = (TextView) v.findViewById(R.id.place);
                     TextView address = (TextView) v.findViewById(R.id.address);
-                    TextView contactPerson = (TextView) v.findViewById(R.id.contactPerson);
-                    TextView times = (TextView) v.findViewById(R.id.times);
-                    TextView webPage = (TextView) v.findViewById(R.id.webPage);
                     TextView email = (TextView) v.findViewById(R.id.email);
                     TextView phone = (TextView) v.findViewById(R.id.phone);
 
@@ -272,8 +268,6 @@ public class MapsActivity extends FragmentActivity
                         clubName.setText(club.getName());
                         place.setText(club.getPlace());
                         address.setText(club.getAddress());
-                        contactPerson.setText(club.getContactPerson());
-                        webPage.setText(club.getWebPage());
                         email.setText(club.getEmail());
                         phone.setText(club.getPhone());
                     }

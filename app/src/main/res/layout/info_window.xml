@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"   >
@@ -11,60 +12,41 @@
                   android:src="@drawable/bride_logo"/>
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/clubName"
-            android:text="Klubbnavn"
+            tools:text="Klubbnavn"
             android:textSize="20sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/place"
-            android:text="Sted"/>
+            tools:text="I det store bygget"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/address"
-            android:text="Adresse"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/contactPerson"
-            android:text="Kontaktperson"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/times"
-            android:text="Spilldager"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/webPage"
-            android:text="Nettside"/>
+            tools:text="Parkveien 1, Bergen"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/email"
-            android:text="Epost"/>
+            android:autoLink="email"
+            tools:text="kaataknut@gmail.com"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/phone"
-            android:text="Tlf"/>
+            android:autoLink="phone"
+            tools:text="92052058"/>
 
     </LinearLayout>
-
-
-
 </LinearLayout>
