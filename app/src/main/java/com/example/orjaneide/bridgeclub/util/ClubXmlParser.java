@@ -93,6 +93,7 @@ public class ClubXmlParser {
             } else if(tag.equalsIgnoreCase("phone")) {
                 builder.withPhone(readValue(parser, "phone"));
             }
+
         }
 
         return builder.build();

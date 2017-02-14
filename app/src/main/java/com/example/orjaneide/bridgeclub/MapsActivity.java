@@ -1,10 +1,14 @@
 package com.example.orjaneide.bridgeclub;
 
+import android.*;
+import android.Manifest;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -40,11 +44,19 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
+    // Logging tag
     private static final String TAG = MapsActivity.class.getSimpleName();
+
+    // Constants
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static final int PERMISSION_LOCATION_REQUEST_CODE = 9;
+
+    // Member variables
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private FloatingSearchView mSearchView;
     private LocationRequest mLocationRequest;
+    private Geocoder mGeocoder;
 
 
     @Override
@@ -62,6 +74,10 @@ public class MapsActivity extends FragmentActivity
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
+        }
+
+        if(mGeocoder == null) {
+            mGeocoder = new Geocoder(this);
         }
 
         // Read in XML file
@@ -91,25 +107,27 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onSearchAction(String currentQuery) {
                 Geocoder gc = new Geocoder(MapsActivity.this);
-                List<Address> list = null;
+                List<Address> list;
+
                 try {
                     list = gc.getFromLocationName(currentQuery, 1);
+                    if(list.size() > 0) {
+                        Address address = list.get(0);
+                        double lat = address.getLatitude();
+                        double lng = address.getLongitude();
+                        goToLocationZoom(lat, lng, 12);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Address address = list.get(0);
-
-                double lat = address.getLatitude();
-                double lng = address.getLongitude();
-                goToLocationZoom(lat, lng, 12);
             }
         });
 
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         if(mGoogleApiClient != null) {
             mGoogleApiClient.connect();
             Log.d(TAG, "mGoogleApiClient connect method has been called!");
@@ -117,10 +135,11 @@ public class MapsActivity extends FragmentActivity
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         if(mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             Log.d(TAG, "mGoogleApiClient is disconnected");
         }
     }
@@ -130,11 +149,7 @@ public class MapsActivity extends FragmentActivity
         Log.d(TAG, "onConnected called!");
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -156,7 +171,31 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed called!");
+        /*
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+            /*
+             * If no resolution is available, display a dialog to the
+             * user with the error.
+             */
+            Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
     }
 
     @Override
@@ -209,14 +248,24 @@ public class MapsActivity extends FragmentActivity
         }
     }
 
-    private void addAllMarkersToMap(List<Club> clubs) {
+    private void addAllMarkersToMap(List<Club> clubs) throws IOException {
+        List<Address> addresses;
+        LatLng current;
 
+        // TODO: Find a way to add each individul club a marker to the map
+        for(Club club : clubs) {
+            addresses = mGeocoder.getFromLocationName(club.getAddress(), 1);
+            double lat = addresses.get(0).getLatitude();
+            double lng = addresses.get(0).getLongitude();
+            current = new LatLng(lat, lng);
+            mMap.addMarker(new MarkerOptions().position(current));
+        }
 
     }
 
 
 
-    // Code for loading the local XML file
+    // LOADING LOCAL XML FILE CODE
     public void loadXml() {
         new DownloadXmlTask().execute();
     }
@@ -238,7 +287,11 @@ public class MapsActivity extends FragmentActivity
         protected void onPostExecute(List<Club> clubs) {
             Log.d(TAG, "onPostExecute called!");
             if(clubs.size() > 0) {
-                addAllMarkersToMap(clubs);
+                try {
+                    addAllMarkersToMap(clubs);
+                } catch(IOException e) {
+                    Toast.makeText(MapsActivity.this, "Errors with displaying clubs on maps", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(MapsActivity.this, "Error with downloading the info", Toast.LENGTH_LONG).show();
             }

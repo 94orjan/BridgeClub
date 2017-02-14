@@ -3,8 +3,6 @@ package com.example.orjaneide.bridgeclub.model;
 import java.util.List;
 
 public class Club {
-    private float latitude;
-    private float longitude;
     private int clubNumber;
     private String name;
     private String place;
@@ -15,9 +13,7 @@ public class Club {
     private String email;
     private String phone;
 
-    public Club(float latitude, float longitude, int clubNumber, String place, String address, String contactPerson, String webPage, String email, String phone) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Club(int clubNumber, String place, String address, String contactPerson, String webPage, String email, String phone) {
         this.clubNumber = clubNumber;
         this.place = place;
         this.address = address;
@@ -25,14 +21,6 @@ public class Club {
         this.webPage = webPage;
         this.email = email;
         this.phone = phone;
-    }
-
-    public float getLatitude() {
-        return latitude;
-    }
-
-    public float getLongitude() {
-        return longitude;
     }
 
     public int getClubNumber() {
@@ -74,8 +62,6 @@ public class Club {
     }
 
     public Club(ClubBuilder builder) {
-        this.latitude = builder.latitude;
-        this.longitude = builder.longitude;
         this.clubNumber = builder.clubNumber;
         this.address = builder.address;
         this.email = builder.email;
@@ -88,8 +74,6 @@ public class Club {
     }
 
     public static class ClubBuilder {
-        private float latitude;
-        private float longitude;
         private int clubNumber;
         private String place;
         private String address;
@@ -99,16 +83,6 @@ public class Club {
         private String email;
         private String phone;
         private String name;
-
-        public ClubBuilder withLatitude(float latitude){
-            this.latitude = latitude;
-            return this;
-        }
-
-        public ClubBuilder withLongitude(float longitude){
-            this.longitude = longitude;
-            return this;
-        }
 
         public ClubBuilder withClubNumber(int clubNumber) {
             this.clubNumber = clubNumber;
