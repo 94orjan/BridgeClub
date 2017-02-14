@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<bridge>
+   <club clubnumber="1">
+      <name>Bergen Akademiske BK</name>
+      <place>Kantinen på Studentsenteret i Bergen (Innerst i langtarmen)</place>
+      <address>Parkveien 1</address>
+      <contactperson>Sven Olai Høyland</contactperson>
+      <gametimes>
+         <tid>
+            <dag>Mandag</dag>
+            <klokkeslett>18:15</klokkeslett>
+         </tid>
+         <tid>
+            <dag>Onsdag</dag>
+            <klokkeslett>17:00</klokkeslett>
+         </tid>
+      </gametimes>
+      <webpage>http://www.bakbk.no/</webpage>
+      <email>kaataknut@gmail.com</email>
+      <phone>92052058</phone>
+   </club>
+
+   <club clubnumber="1405">
+      <name>Askøy BK</name>
+      <place>Folkets Hus, Kleppestø</place>
+      <address>Rindalsvegen</address>
+      <contactperson>Stein Gustav Riisøen</contactperson>
+      <gametimes>
+         <tid>
+            <dag>Mandag</dag>
+            <klokkeslett>18:15</klokkeslett>
+         </tid>
+      </gametimes>
+      <webpage>http://www.bridgekrets.no/Kretser/NBF-Hordaland/cluber/Askoey-BK</webpage>
+      <email>kaataknut@gmail.com</email>
+      <phone>92052058</phone>
+   </club>
+
+   <club clubnumber="1467">
+      <name>Bergen Akademiske BK</name>
+      <place>Grendahuset Våge Foldnes</place>
+      <address>Sotra</address>
+      <contactperson>Tore Furevik</contactperson>
+      <gametimes>
+         <tid>
+            <dag>Tirsdag</dag>
+            <klokkeslett>19:00</klokkeslett>
+         </tid>
+      </gametimes>
+      <webpage>http://www.bakbk.no/</webpage>
+      <email>kaataknut@gmail.com</email>
+      <phone>92052058</phone>
+   </club>
+</bridge>
