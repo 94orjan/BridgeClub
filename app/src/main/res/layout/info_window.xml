@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/email"
             android:autoLink="email"
-            tools:text="kaataknut@gmail.com"/>
+            tools:text="kaataknut@gmail.com"
+            />
 
         <TextView
             android:layout_width="wrap_content"

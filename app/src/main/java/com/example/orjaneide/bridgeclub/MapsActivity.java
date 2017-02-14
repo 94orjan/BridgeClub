@@ -3,13 +3,17 @@ package com.example.orjaneide.bridgeclub;
 import android.*;
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.example.orjaneide.bridgeclub.model.Club;
@@ -36,7 +41,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,6 +55,7 @@ public class MapsActivity extends FragmentActivity
         LocationListener {
     // Logging tag
     private static final String TAG = MapsActivity.class.getSimpleName();
+
 
     // Constants
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -70,7 +78,7 @@ public class MapsActivity extends FragmentActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if(mGoogleApiClient == null) {
+        if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
@@ -78,7 +86,7 @@ public class MapsActivity extends FragmentActivity
                     .build();
         }
 
-        if(mGeocoder == null) {
+        if (mGeocoder == null) {
             mGeocoder = new Geocoder(this);
         }
 
@@ -93,8 +101,8 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //
             }
         }
@@ -104,6 +112,7 @@ public class MapsActivity extends FragmentActivity
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is being created");
         mMap = googleMap;
+
 
         LatLng init = new LatLng(65, 15);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(init, (float) 4.3));
@@ -123,7 +132,7 @@ public class MapsActivity extends FragmentActivity
 
                 try {
                     list = gc.getFromLocationName(currentQuery, 1);
-                    if(list.size() > 0) {
+                    if (list.size() > 0) {
                         Address address = list.get(0);
                         double lat = address.getLatitude();
                         double lng = address.getLongitude();
@@ -140,7 +149,7 @@ public class MapsActivity extends FragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if(mGoogleApiClient != null) {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
             Log.d(TAG, "mGoogleApiClient connect method has been called!");
         }
@@ -149,7 +158,7 @@ public class MapsActivity extends FragmentActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if(mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             Log.d(TAG, "mGoogleApiClient is disconnected");
@@ -160,7 +169,7 @@ public class MapsActivity extends FragmentActivity
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "onConnected called!");
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(MapsActivity.this)
                         .setTitle("Location Permission")
                         .setMessage("The user experience will be better if you allow us to use your location")
@@ -190,7 +199,7 @@ public class MapsActivity extends FragmentActivity
     }
 
     private void handleNewLocation(Location location) {
-        if(location != null) {
+        if (location != null) {
             Log.d(TAG, location.toString());
             LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 12);
@@ -238,7 +247,7 @@ public class MapsActivity extends FragmentActivity
         handleNewLocation(location);
     }
 
-    private void  goToLocationZoom(double lat, double lng, float zoom){
+    private void goToLocationZoom(double lat, double lng, float zoom) {
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         mMap.moveCamera(update);
@@ -246,7 +255,7 @@ public class MapsActivity extends FragmentActivity
 
 
     private void addInfoWindowToMarker() {
-        if(mMap != null){
+        if (mMap != null) {
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
                 public View getInfoWindow(Marker marker) {
@@ -264,7 +273,7 @@ public class MapsActivity extends FragmentActivity
                     TextView phone = (TextView) v.findViewById(R.id.phone);
 
                     Club club = (Club) marker.getTag();
-                    if(club !=  null) {
+                    if (club != null) {
                         clubName.setText(club.getName());
                         place.setText(club.getPlace());
                         address.setText(club.getAddress());
@@ -284,23 +293,23 @@ public class MapsActivity extends FragmentActivity
         Marker marker;
 
         // TODO: Find a way to add each individul club a marker to the map
-        for(Club club : clubs) {
+        for (Club club : clubs) {
             addresses = mGeocoder.getFromLocationName(club.getAddress(), 1);
             double lat = addresses.get(0).getLatitude();
             double lng = addresses.get(0).getLongitude();
             current = new LatLng(lat, lng);
-            marker = mMap.addMarker(new MarkerOptions().position(current));
+            marker = mMap.addMarker(new MarkerOptions().position(current).title(club.getName()));
             marker.setTag(club);
         }
 
     }
 
 
-
     // LOADING LOCAL XML FILE CODE
     public void loadXml() {
         new DownloadXmlTask().execute();
     }
+
 
     private class DownloadXmlTask extends AsyncTask<String, Void, List<Club>> {
         @Override
@@ -318,10 +327,10 @@ public class MapsActivity extends FragmentActivity
         @Override
         protected void onPostExecute(List<Club> clubs) {
             Log.d(TAG, "onPostExecute called!");
-            if(clubs.size() > 0) {
+            if (clubs.size() > 0) {
                 try {
                     addAllMarkersToMap(clubs);
-                } catch(IOException e) {
+                } catch (IOException e) {
                     Toast.makeText(MapsActivity.this, "Errors with displaying clubs on maps", Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -342,4 +351,32 @@ public class MapsActivity extends FragmentActivity
             in.close();
         }
     }
+
+    private void makePhoneCallIntent(int phoneNumer) {
+        Intent phoneCallIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumer));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        startActivity(phoneCallIntent);
+    }
+
+    private void sendEmailIntent(String email){
+        Intent emailIntent =new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
+        startActivity(emailIntent);
+
+    }
+
+
+
+
 }
