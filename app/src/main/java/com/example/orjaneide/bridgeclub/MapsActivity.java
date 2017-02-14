@@ -2,6 +2,7 @@ package com.example.orjaneide.bridgeclub;
 
 import android.*;
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -13,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -80,8 +82,22 @@ public class MapsActivity extends FragmentActivity
             mGeocoder = new Geocoder(this);
         }
 
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
         // Read in XML file
         loadXml();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            }
+        }
     }
 
     @Override
@@ -126,8 +142,8 @@ public class MapsActivity extends FragmentActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if(mGoogleApiClient != null) {
             mGoogleApiClient.connect();
             Log.d(TAG, "mGoogleApiClient connect method has been called!");
@@ -135,8 +151,8 @@ public class MapsActivity extends FragmentActivity
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if(mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -147,21 +163,46 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "onConnected called!");
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(MapsActivity.this)
+                        .setTitle("Location Permission")
+                        .setMessage("The user experience will be better if you allow us to use your location")
+                        .setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
+                            }
+                        })
+                        .setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(MapsActivity.this, "App may not work as expected without the location", Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
+            }
+
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        } else {
+            handleNewLocation(location);
+        }
+    }
+
+    private void handleNewLocation(Location location) {
+        if(location != null) {
+            Log.d(TAG, location.toString());
+            LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 12);
+            mMap.animateCamera(update);
+        }
     }
 
     @Override
@@ -201,15 +242,7 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged called!");
-        if(location == null){
-            Toast.makeText(this, "Finner ikke lokasjonen din.", Toast.LENGTH_LONG).show();
-        }
-        else{
-            LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 12);
-            mMap.animateCamera(update);
-        }
-
+        handleNewLocation(location);
     }
 
     private void  goToLocationZoom(double lat, double lng, float zoom){
@@ -217,8 +250,6 @@ public class MapsActivity extends FragmentActivity
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         mMap.moveCamera(update);
     }
-
-
 
     private void addInfoWindowToMarker() {
         if(mMap != null){
