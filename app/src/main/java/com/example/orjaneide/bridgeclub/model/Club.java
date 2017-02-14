@@ -3,8 +3,8 @@ package com.example.orjaneide.bridgeclub.model;
 import java.util.List;
 
 public class Club {
-    private int latitude;
-    private int longitude;
+    private float latitude;
+    private float longitude;
     private int clubNumber;
     private String name;
     private String place;
@@ -15,7 +15,7 @@ public class Club {
     private String email;
     private String phone;
 
-    public Club(int latitude, int longitude, int clubNumber, String place, String address, String contactPerson, String webPage, String email, String phone) {
+    public Club(float latitude, float longitude, int clubNumber, String place, String address, String contactPerson, String webPage, String email, String phone) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.clubNumber = clubNumber;
@@ -27,11 +27,11 @@ public class Club {
         this.phone = phone;
     }
 
-    public int getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
-    public int getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
@@ -88,8 +88,8 @@ public class Club {
     }
 
     public static class ClubBuilder {
-        private int latitude;
-        private int longitude;
+        private float latitude;
+        private float longitude;
         private int clubNumber;
         private String place;
         private String address;
@@ -100,12 +100,12 @@ public class Club {
         private String phone;
         private String name;
 
-        public ClubBuilder withLatitude(int latitude){
+        public ClubBuilder withLatitude(float latitude){
             this.latitude = latitude;
             return this;
         }
 
-        public ClubBuilder withLongitude(int longitude){
+        public ClubBuilder withLongitude(float longitude){
             this.longitude = longitude;
             return this;
         }
