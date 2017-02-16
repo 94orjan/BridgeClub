@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class ClubActivity extends AppCompatActivity {
 
@@ -43,7 +44,7 @@ public class ClubActivity extends AppCompatActivity {
     }
 
     private void makePhoneCallIntent(int phoneNumer) {
-        Intent phoneCallIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumer));
+        Intent phoneCallIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumer));
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -58,11 +59,15 @@ public class ClubActivity extends AppCompatActivity {
     }
 
     private void sendEmailIntent(String email){
-        Intent emailIntent =new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
-        startActivity(emailIntent);
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
+
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(ClubActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

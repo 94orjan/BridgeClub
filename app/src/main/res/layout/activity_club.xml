@@ -13,7 +13,7 @@
     android:background="@color/wallet_highlighted_text_holo_dark">
 
     <TextView
-        android:text="Bergen Akademiske BK"
+        tools:text="Bergen Akademiske BK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -31,7 +31,7 @@
         android:id="@+id/logo_imageView" />
 
     <TextView
-        android:text=" Adresse: Parkveien 1."
+        tools:text=" Adresse: Parkveien 1."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo_imageView"
@@ -40,7 +40,7 @@
         android:id="@+id/address_textView" />
 
     <TextView
-        android:text="Kantina på Studentsentert"
+        tools:text="Kantina på Studentsentert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/address_textView"
@@ -49,7 +49,7 @@
         android:id="@+id/place_textView" />
 
     <TextView
-        android:text="Leder: Sven-Olai Høyland"
+        tools:text="Leder: Sven-Olai Høyland"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/place_textView"
