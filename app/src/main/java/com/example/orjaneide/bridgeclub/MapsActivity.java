@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcel;
@@ -51,9 +52,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+
 
 public class MapsActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     // Logging tag
     private static final String TAG = MapsActivity.class.getSimpleName();
@@ -94,14 +97,14 @@ public class MapsActivity extends FragmentActivity
         }
 
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
 
 
         // Read in XML file
         loadXml();
+
+
     }
 
     @Override
@@ -149,6 +152,9 @@ public class MapsActivity extends FragmentActivity
             }
         });
 
+        mMap.setOnInfoWindowClickListener(this);
+
+
     }
 
     @Override
@@ -165,7 +171,8 @@ public class MapsActivity extends FragmentActivity
         super.onStop();
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
-            // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
             Log.d(TAG, "mGoogleApiClient is disconnected");
         }
     }
@@ -274,16 +281,14 @@ public class MapsActivity extends FragmentActivity
                     TextView clubName = (TextView) v.findViewById(R.id.clubName);
                     TextView place = (TextView) v.findViewById(R.id.place);
                     TextView address = (TextView) v.findViewById(R.id.address);
-                    TextView email = (TextView) v.findViewById(R.id.email);
-                    TextView phone = (TextView) v.findViewById(R.id.phone);
+
 
                     Club club = (Club) marker.getTag();
                     if (club != null) {
                         clubName.setText(club.getName());
                         place.setText(club.getPlace());
                         address.setText(club.getAddress());
-                        email.setText(club.getEmail());
-                        phone.setText(club.getPhone());
+
                     }
 
                     return v;
@@ -312,6 +317,13 @@ public class MapsActivity extends FragmentActivity
     // LOADING LOCAL XML FILE CODE
     public void loadXml() {
         new DownloadXmlTask().execute();
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(this, ClubActivity.class);
+        startActivity(intent);
+
     }
 
 
@@ -355,29 +367,5 @@ public class MapsActivity extends FragmentActivity
         } finally {
             in.close();
         }
-    }
-
-    private void makePhoneCallIntent(int phoneNumer) {
-        Intent phoneCallIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumer));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        startActivity(phoneCallIntent);
-    }
-
-    private void sendEmailIntent(String email){
-        Intent emailIntent =new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
-        startActivity(emailIntent);
-
     }
 }

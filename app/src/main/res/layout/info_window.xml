@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"   >
 
-              <ImageView
-                  android:id="@+id/logoImageView"
-                  android:layout_width="100dp"
-                  android:layout_height="150dp"
-                  android:src="@drawable/bride_logo"/>
+
     <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -34,20 +27,5 @@
             android:id="@+id/address"
             tools:text="Parkveien 1, Bergen"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/email"
-            android:autoLink="email"
-            tools:text="kaataknut@gmail.com"
-            />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/phone"
-            android:autoLink="phone"
-            tools:text="92052058"/>
-
-    </LinearLayout>
 </LinearLayout>
