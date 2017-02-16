@@ -1,88 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_club"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.example.orjaneide.bridgeclub.ClubActivity"
-    android:background="@color/wallet_highlighted_text_holo_dark">
-
-    <TextView
-        tools:text="Bergen Akademiske BK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="193dp"
-        android:id="@+id/club_name_textView" />
+    android:background="#303F93">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"
         app:srcCompat="@drawable/bride_logo"
         android:layout_above="@+id/club_name_textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="109dp"
-        android:id="@+id/logo_imageView" />
+        android:id="@+id/logo_imageView"
+        android:background="#ffffff"/>
+
+    <TextView
+        tools:text="Bergen Akademiske BK"
+        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_marginTop="20dp"
+        android:id="@+id/club_name_textView"
+        android:textColor="@color/background" />
+
 
     <TextView
         tools:text=" Adresse: Parkveien 1."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_below="@+id/logo_imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:id="@+id/address_textView" />
+        android:id="@+id/address_textView"
+        android:textColor="@color/background"
+        android:layout_marginLeft="15dp"/>
 
     <TextView
         tools:text="Kantina på Studentsentert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_below="@+id/address_textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:id="@+id/place_textView" />
+        android:id="@+id/place_textView"
+        android:textColor="@color/background"
+        android:layout_marginLeft="15dp"/>
 
     <TextView
         tools:text="Leder: Sven-Olai Høyland"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/place_textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:id="@+id/contact_person_textView" />
-
-    <LinearLayout
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_below="@+id/place_textView"
+        android:id="@+id/contact_person_textView"
+        android:textColor="@color/background"
+        android:layout_marginLeft="15dp"/>
 
-        <ImageButton
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/stat_sys_phone_call"
-            android:layout_below="@+id/contact_person_textView"
-            android:layout_alignStart="@+id/address_textView"
-            android:layout_marginStart="20dp"
-            android:id="@+id/phone_call_imageButton"
-            android:layout_weight="1" />
+            android:paddingBottom="7dp"
+           >
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_dialog_email"
-            android:layout_below="@+id/contact_person_textView"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="63dp"
-            android:id="@+id/email_imageButton"
-            android:layout_weight="1" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/stat_sys_phone_call"
+                android:id="@+id/phone_call_imageButton"
+                android:layout_weight="1"
+                android:background="#7886d3"
+                android:layout_margin="5dp"/>
 
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_dialog_email"
+                android:id="@+id/email_imageButton"
+                android:layout_weight="1"
+                android:background="#7886d3"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+
+
+
