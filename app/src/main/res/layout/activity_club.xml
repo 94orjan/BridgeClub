@@ -63,19 +63,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:text="Button"
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button3"
+            app:srcCompat="@android:drawable/stat_sys_phone_call"
+            android:layout_below="@+id/contact_person_textView"
+            android:layout_alignStart="@+id/address_textView"
+            android:layout_marginStart="20dp"
+            android:id="@+id/phone_call_imageButton"
             android:layout_weight="1" />
 
-        <Button
-            android:text="Button"
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button2"
-            android:layout_weight="1"
-            style="@style/Widget.AppCompat.Button" />
+            app:srcCompat="@android:drawable/ic_dialog_email"
+            android:layout_below="@+id/contact_person_textView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="63dp"
+            android:id="@+id/email_imageButton"
+            android:layout_weight="1" />
+
     </LinearLayout>
+
 </RelativeLayout>
