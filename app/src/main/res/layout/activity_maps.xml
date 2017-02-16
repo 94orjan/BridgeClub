@@ -20,11 +20,6 @@
         android:layout_height="match_parent"
         app:floatingSearch_searchHint="Søk..."/>
 
-    <fragment
-        android:id="@+id/infoWindowMap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.appolica.interactiveinfowindow.fragment.MapInfoWindowFragment"/>
 
 
 
