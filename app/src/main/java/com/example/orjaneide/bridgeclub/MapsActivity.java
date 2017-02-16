@@ -321,9 +321,10 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        Club club = (Club) marker.getTag();
         Intent intent = new Intent(this, ClubActivity.class);
+        intent.putExtra(ClubActivity.CLUB_NUMBER, club.getClubNumber());
         startActivity(intent);
-
     }
 
 

@@ -10,40 +10,68 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.orjaneide.bridgeclub.model.Club;
+import com.example.orjaneide.bridgeclub.model.ClubDao;
+import com.example.orjaneide.bridgeclub.model.ClubDaoImpl;
 
 public class ClubActivity extends AppCompatActivity {
+    public static final String CLUB_NUMBER = "CLUB_NUMBER";
 
     private ImageButton phonecallButton;
     private ImageButton emailButton;
+    private TextView mClubNameTextView;
+    private TextView mAddressTextView;
+    private TextView mPlaceTextView;
+    private TextView mContactPersonTextView;
+
+    private ClubDao mClubDao = new ClubDaoImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
 
-        final int phoneNumber = 99442211;
+        // Get intent
+        Intent intent = getIntent();
+        int clubNumber = intent.getIntExtra(CLUB_NUMBER, -1);
+        final Club club = mClubDao.findClubById(clubNumber);
 
-        final String email = "melk@gmail.com";
-
+        // Initialize views
         phonecallButton = (ImageButton) findViewById(R.id.phone_call_imageButton);
         emailButton = (ImageButton) findViewById(R.id.email_imageButton);
+        mClubNameTextView = (TextView) findViewById(R.id.club_name_textView);
+        mAddressTextView = (TextView) findViewById(R.id.address_textView);
+        mPlaceTextView = (TextView) findViewById(R.id.place_textView);
+        mContactPersonTextView = (TextView) findViewById(R.id.contact_person_textView);
+
+        if(club != null) {
+            mClubNameTextView.setText(club.getName());
+            mAddressTextView.setText(club.getAddress());
+            mPlaceTextView.setText(club.getPlace());
+            mContactPersonTextView.setText(club.getContactPerson());
+        } else {
+            Toast.makeText(this, "Didn't find any club with id " + clubNumber, Toast.LENGTH_SHORT).show();
+        }
 
         phonecallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makePhoneCallIntent(phoneNumber);
+                makePhoneCallIntent(club.getPhone());
             }
         });
 
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendEmailIntent(email);
+                sendEmailIntent(club.getEmail());
             }
         });
     }
 
-    private void makePhoneCallIntent(int phoneNumer) {
+    private void makePhoneCallIntent(String phoneNumer) {
         Intent phoneCallIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumer));
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
