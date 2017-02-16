@@ -70,6 +70,14 @@ public class ClubXmlParser {
             IOException  {
         parser.require(XmlPullParser.START_TAG, ns, "club");
 
+        int clubNumber;
+        try {
+            clubNumber = Integer.parseInt(parser.getAttributeValue(null, "clubnumber"));
+        } catch(NumberFormatException e) {
+            clubNumber = -1;
+        }
+
+        builder.withClubNumber(clubNumber);
         while(parser.next() != XmlPullParser.END_TAG ) {
             if(parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;

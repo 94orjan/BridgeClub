@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.example.orjaneide.bridgeclub.model.Club;
+import com.example.orjaneide.bridgeclub.model.ClubDao;
+import com.example.orjaneide.bridgeclub.model.ClubDaoImpl;
 import com.example.orjaneide.bridgeclub.util.ClubXmlParser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -67,6 +69,7 @@ public class MapsActivity extends FragmentActivity
     private FloatingSearchView mSearchView;
     private LocationRequest mLocationRequest;
     private Geocoder mGeocoder;
+    private ClubDao mClubDao = new ClubDaoImpl();
 
 
     @Override
@@ -94,6 +97,8 @@ public class MapsActivity extends FragmentActivity
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+
 
         // Read in XML file
         loadXml();
@@ -160,7 +165,7 @@ public class MapsActivity extends FragmentActivity
         super.onStop();
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             Log.d(TAG, "mGoogleApiClient is disconnected");
         }
     }
@@ -292,7 +297,6 @@ public class MapsActivity extends FragmentActivity
         LatLng current;
         Marker marker;
 
-        // TODO: Find a way to add each individul club a marker to the map
         for (Club club : clubs) {
             addresses = mGeocoder.getFromLocationName(club.getAddress(), 1);
             double lat = addresses.get(0).getLatitude();
@@ -329,7 +333,8 @@ public class MapsActivity extends FragmentActivity
             Log.d(TAG, "onPostExecute called!");
             if (clubs.size() > 0) {
                 try {
-                    addAllMarkersToMap(clubs);
+                    Club.setClubs(clubs);
+                    addAllMarkersToMap(mClubDao.getAllClubs());
                 } catch (IOException e) {
                     Toast.makeText(MapsActivity.this, "Errors with displaying clubs on maps", Toast.LENGTH_SHORT).show();
                 }
@@ -375,8 +380,4 @@ public class MapsActivity extends FragmentActivity
         startActivity(emailIntent);
 
     }
-
-
-
-
 }

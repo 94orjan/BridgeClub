@@ -1,5 +1,6 @@
 package com.example.orjaneide.bridgeclub.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Club {
@@ -12,16 +13,6 @@ public class Club {
     private String webPage;
     private String email;
     private String phone;
-
-    public Club(int clubNumber, String place, String address, String contactPerson, String webPage, String email, String phone) {
-        this.clubNumber = clubNumber;
-        this.place = place;
-        this.address = address;
-        this.contactPerson = contactPerson;
-        this.webPage = webPage;
-        this.email = email;
-        this.phone = phone;
-    }
 
     public int getClubNumber() {
         return clubNumber;
@@ -127,5 +118,16 @@ public class Club {
         public Club build() {
             return new Club(this);
         }
+    }
+
+
+    public static List<Club> clubs = new ArrayList<>();
+
+    public static List<Club> getClubs() {
+        return clubs;
+    }
+
+    public static void setClubs(List<Club> pClubs) {
+        clubs = pClubs;
     }
 }
