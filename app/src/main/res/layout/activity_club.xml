@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_club"
@@ -7,88 +9,112 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.orjaneide.bridgeclub.ClubActivity"
-    android:background="#303F93">
+    android:background="@color/club_activity_background">
 
-    <ImageView
+
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
-        app:srcCompat="@drawable/bride_logo"
-        android:layout_above="@+id/club_name_textView"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/logo_imageView"
-        android:background="#ffffff"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        tools:text="Bergen Akademiske BK"
-        android:textSize="25sp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_marginTop="20dp"
-        android:id="@+id/club_name_textView"
-        android:textColor="@color/background" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            app:srcCompat="@drawable/bride_logo"
+            android:layout_above="@+id/club_name_textView"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/logo_imageView"
+            android:background="#ffffff"/>
 
 
-    <TextView
-        tools:text=" Adresse: Parkveien 1."
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_below="@+id/logo_imageView"
-        android:id="@+id/address_textView"
-        android:textColor="@color/background"
-        android:layout_marginLeft="15dp"/>
+        <TextView
+            tools:text="Bergen Akademiske BK"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/club_name_textView"
+            android:textColor="@color/background" />
 
-    <TextView
-        tools:text="Kantina på Studentsentert"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_below="@+id/address_textView"
-        android:id="@+id/place_textView"
-        android:textColor="@color/background"
-        android:layout_marginLeft="15dp"/>
+        <TextView
+            tools:text="Adresse: Parkveien 1."
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:layout_below="@+id/logo_imageView"
+            android:id="@+id/address_textView"
+            android:textColor="@color/background"
+            android:layout_marginLeft="15dp"/>
 
-    <TextView
-        tools:text="Leder: Sven-Olai Høyland"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_below="@+id/place_textView"
-        android:id="@+id/contact_person_textView"
-        android:textColor="@color/background"
-        android:layout_marginLeft="15dp"/>
+        <TextView
+            tools:text="Kantina på Studentsentert"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:layout_below="@+id/address_textView"
+            android:id="@+id/place_textView"
+            android:textColor="@color/background"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            tools:text="Leder: Sven-Olai Høyland"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:layout_below="@+id/place_textView"
+            android:id="@+id/contact_person_textView"
+            android:textColor="@color/background"
+            android:layout_marginLeft="15dp"/>
 
         <LinearLayout
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="7dp"
-           >
-
-            <ImageButton
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/stat_sys_phone_call"
-                android:id="@+id/phone_call_imageButton"
-                android:layout_weight="1"
-                android:background="#7886d3"
-                android:layout_margin="5dp"/>
+                android:layout_height="0dp"
+                android:paddingBottom="7dp"
+            android:layout_weight="9">
 
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/ic_dialog_email"
-                android:id="@+id/email_imageButton"
-                android:layout_weight="1"
-                android:background="#7886d3"
-                android:layout_margin="5dp"/>
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@android:drawable/stat_sys_phone_call"
+                    android:id="@+id/phone_call_imageButton"
+                    android:layout_weight="1"
+                    android:background="#7886d3"
+                    android:layout_margin="5dp"/>
 
-        </LinearLayout>
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@android:drawable/ic_dialog_email"
+                    android:id="@+id/email_imageButton"
+                    android:layout_weight="1"
+                    android:background="#7886d3"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_directions_white_24dp"
+        android:id="@+id/direction_floatingActionButton"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="10dp"
+        app:backgroundTint="@color/colorAccent"
+        android:onClick="showDirection"
+        />
+
+
+</RelativeLayout>
 
 
 

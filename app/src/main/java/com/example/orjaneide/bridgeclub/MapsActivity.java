@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -98,8 +99,6 @@ public class MapsActivity extends FragmentActivity
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_LOW_POWER);
-
-
 
         // Read in XML file
         loadXml();
@@ -300,6 +299,7 @@ public class MapsActivity extends FragmentActivity
     private void addAllMarkersToMap(List<Club> clubs) throws IOException {
         List<Address> addresses;
         LatLng current;
+
         Marker marker;
 
         for (Club club : clubs) {
@@ -369,4 +369,6 @@ public class MapsActivity extends FragmentActivity
             in.close();
         }
     }
+
+
 }

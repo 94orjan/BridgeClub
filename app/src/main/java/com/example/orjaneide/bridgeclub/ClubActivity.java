@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.example.orjaneide.bridgeclub.model.ClubDaoImpl;
 
 public class ClubActivity extends AppCompatActivity {
     public static final String CLUB_NUMBER = "CLUB_NUMBER";
+    private static final String TAG = ClubActivity.class.getSimpleName();
 
     private ImageButton phonecallButton;
     private ImageButton emailButton;
@@ -26,7 +28,7 @@ public class ClubActivity extends AppCompatActivity {
     private TextView mAddressTextView;
     private TextView mPlaceTextView;
     private TextView mContactPersonTextView;
-
+    private  Club club;
     private ClubDao mClubDao = new ClubDaoImpl();
 
     @Override
@@ -37,7 +39,7 @@ public class ClubActivity extends AppCompatActivity {
         // Get intent
         Intent intent = getIntent();
         int clubNumber = intent.getIntExtra(CLUB_NUMBER, -1);
-        final Club club = mClubDao.findClubById(clubNumber);
+        club = mClubDao.findClubById(clubNumber);
 
         // Initialize views
         phonecallButton = (ImageButton) findViewById(R.id.phone_call_imageButton);
@@ -97,5 +99,11 @@ public class ClubActivity extends AppCompatActivity {
             Toast.makeText(ClubActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void showDirection(View view){
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?saddr=&daddr=" + club.getAddress()));
+        startActivity(intent);
     }
 }
