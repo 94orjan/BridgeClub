@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BridgeClub</string>
     <string name="title_activity_maps">BridgeClub</string>
+    <string name="title_activity_clubs">Klubbinfo</string>
 </resources>
