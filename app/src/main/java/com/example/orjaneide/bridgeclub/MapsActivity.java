@@ -98,7 +98,7 @@ public class MapsActivity extends FragmentActivity
         }
 
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_LOW_POWER);
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         // Read in XML file
         loadXml();
