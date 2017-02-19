@@ -43,11 +43,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".ClubActivity"
-            android:label="@string/title_activity_clubs">
+            android:label=""
+            android:theme="@style/CustomActionBarTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.orjaneide.bridgeclub.MapsActivity"/>
         </activity>
     </application>
+
 
 </manifest>
